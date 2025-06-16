@@ -37,14 +37,14 @@ export default function TabLayout() {
                 name="outfit"
                 options={{
                     title: 'Outfits',
-                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
+                    tabBarIcon: ({ color }) => <IconSymbol size={28} name="hanger" color={color} />,
                 }}
             />
         <Tabs.Screen
             name="wardrobe"
             options={{
                 title: 'Wardrobe',
-                tabBarIcon: ({ color }) => <IconSymbol size={28} name="hanger" color={color} />,
+                tabBarIcon: ({ color }) => <IconSymbol size={28} name="magnifyingglass" color={color} />,
             }}
         />
         <Tabs.Screen
