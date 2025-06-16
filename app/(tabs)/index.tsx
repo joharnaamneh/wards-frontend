@@ -2,6 +2,7 @@ import { useEffect} from 'react';
 import {getAuth, onAuthStateChanged } from 'firebase/auth';
 import { useRouter } from 'expo-router';
 import { View, Text, ActivityIndicator } from 'react-native';
+import {ThemedText} from "@/components/ThemedText";
 
 export default function IndexRedirect() {
     const auth = getAuth();
@@ -21,7 +22,7 @@ export default function IndexRedirect() {
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>Hello World!</Text>
+            <ThemedText>Hello World!</ThemedText>
         </View>
     );
 }
