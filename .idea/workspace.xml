@@ -4,10 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Updated Wardrobe UI">
+    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Refactored Wardrobe code&#10;- Added Storage implementation">
+      <change afterPath="$PROJECT_DIR$/components/AddItemModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/AddOutfitModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/FloatingActionButton.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ItemDetailsModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ItemsList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/OutfitDetailsModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/OutfitsList.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useOutfitData.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useWardrobeData.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/OutfitTypes.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/WardrobeTypes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/explore.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/wardrobe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/wardrobe.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,23 +51,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ModuleVcsDetector.initialDetectionPerformed": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/u80864987/dev/mobile/wards-frontend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.lookFeel",
-    "ts.external.directory.path": "/Users/u80864987/dev/mobile/wards-frontend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/u80864987/dev/mobile/wards-frontend&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/u80864987/dev/mobile/wards-frontend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -83,6 +96,8 @@
       <workItem from="1749626388176" duration="4227000" />
       <workItem from="1750053820095" duration="1634000" />
       <workItem from="1750071376042" duration="1433000" />
+      <workItem from="1750144047978" duration="6486000" />
+      <workItem from="1750230029784" duration="7789000" />
     </task>
     <task id="LOCAL-00001" summary="- Updated Wardrobe UI">
       <option name="closed" value="true" />
@@ -92,7 +107,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750079438670</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="- Udjusted layout">
+      <option name="closed" value="true" />
+      <created>1750079998335</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1750079998335</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -100,6 +123,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="- Updated Wardrobe UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Updated Wardrobe UI" />
+    <MESSAGE value="- Udjusted layout" />
+    <MESSAGE value="- Refactored Wardrobe code&#10;- Added Storage implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Refactored Wardrobe code&#10;- Added Storage implementation" />
   </component>
 </project>
