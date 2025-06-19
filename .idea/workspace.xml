@@ -5,22 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Refactored Wardrobe code&#10;- Added Storage implementation">
-      <change afterPath="$PROJECT_DIR$/components/AddItemModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/AddOutfitModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/FloatingActionButton.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ItemDetailsModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/ItemsList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/OutfitDetailsModal.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/components/OutfitsList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useOutfitData.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hooks/useWardrobeData.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/OutfitTypes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/types/WardrobeTypes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/wardrobe.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/wardrobe.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/outfit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/outfit.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/AddOutfitModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AddOutfitModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/firebaseConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/firebaseConfig.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useOutfitData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useOutfitData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useWardrobeData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useWardrobeData.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

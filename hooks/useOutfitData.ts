@@ -1,8 +1,6 @@
-// hooks/useOutfitData.ts
+// hooks/useOutfitData.ts - Enhanced with better error handling and debugging
 import { useEffect, useState } from 'react';
-import { getAuth } from 'firebase/auth';
 import {
-    getFirestore,
     collection,
     query,
     where,
@@ -13,10 +11,8 @@ import {
     serverTimestamp,
     updateDoc
 } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 import { Outfit } from '../types/OutfitTypes';
-
-const db = getFirestore();
-const auth = getAuth();
 
 export const useOutfitData = () => {
     const [outfits, setOutfits] = useState<Outfit[]>([]);
@@ -26,6 +22,7 @@ export const useOutfitData = () => {
         try {
             setLoading(true);
             const user = auth.currentUser;
+
             if (!user) {
                 console.log('No authenticated user');
                 setLoading(false);
@@ -35,8 +32,12 @@ export const useOutfitData = () => {
             console.log('Fetching outfits for user:', user.uid);
 
             const outfitsSnap = await getDocs(
-                query(collection(db, 'outfits'), where('user_id', '==', user.uid))
+                query(
+                    collection(db, 'outfits'),
+                    where('user_id', '==', user.uid)
+                )
             );
+
             console.log('Outfit docs found:', outfitsSnap.docs.length);
 
             const outfitsList = outfitsSnap.docs.map(doc => {
@@ -65,10 +66,12 @@ export const useOutfitData = () => {
 
     const addOutfit = async (newOutfit: Omit<Outfit, 'id' | 'created_at'>) => {
         const user = auth.currentUser;
+
         if (!user) {
             throw new Error('No authenticated user for adding outfit');
         }
 
+        // Additional validation
         if (!newOutfit.name.trim()) {
             throw new Error('Please enter a name for the outfit');
         }
@@ -77,39 +80,78 @@ export const useOutfitData = () => {
             throw new Error('Please select at least one item for the outfit');
         }
 
-        await addDoc(collection(db, 'outfits'), {
-            ...newOutfit,
-            user_id: user.uid,
-            created_at: serverTimestamp(),
-        });
+        try {
+            console.log('Adding outfit for user:', user.uid);
+            console.log('Outfit data:', newOutfit);
 
-        await fetchOutfits(); // Refresh the outfits list
+            // Check if user is authenticated and has a valid token
+            const idToken = await user.getIdToken();
+            console.log('User has valid token:', !!idToken);
+
+            const outfitData = {
+                ...newOutfit,
+                user_id: user.uid,
+                created_at: serverTimestamp(),
+            };
+
+            console.log('Final outfit data to save:', outfitData);
+
+            const docRef = await addDoc(collection(db, 'outfits'), outfitData);
+            console.log('Outfit added with ID:', docRef.id);
+
+            await fetchOutfits(); // Refresh the outfits list
+        } catch (error) {
+            console.error('Detailed error adding outfit:', error);
+
+            // More specific error messages
+            if (error.code === 'permission-denied') {
+                throw new Error('Permission denied. Please check your Firestore security rules.');
+            } else if (error.code === 'unauthenticated') {
+                throw new Error('User not authenticated. Please sign in again.');
+            } else if (error.code === 'failed-precondition') {
+                throw new Error('Database operation failed. Please try again.');
+            } else {
+                throw new Error(`Failed to create outfit: ${error.message}`);
+            }
+        }
     };
 
     const deleteOutfit = async (outfitId: string) => {
         const user = auth.currentUser;
         if (!user) return;
 
-        await deleteDoc(doc(db, 'outfits', outfitId));
-        await fetchOutfits(); // Refresh the outfits list
+        try {
+            await deleteDoc(doc(db, 'outfits', outfitId));
+            await fetchOutfits(); // Refresh the outfits list
+        } catch (error) {
+            console.error('Error deleting outfit:', error);
+            throw new Error('Failed to delete outfit. Please try again.');
+        }
     };
 
     const toggleFavorite = async (outfitId: string, currentFavorite: boolean) => {
         const user = auth.currentUser;
         if (!user) return;
 
-        await updateDoc(doc(db, 'outfits', outfitId), {
-            favorite: !currentFavorite
-        });
-
-        await fetchOutfits(); // Refresh the outfits list
+        try {
+            await updateDoc(doc(db, 'outfits', outfitId), {
+                favorite: !currentFavorite
+            });
+            await fetchOutfits(); // Refresh the outfits list
+        } catch (error) {
+            console.error('Error toggling favorite:', error);
+            throw new Error('Failed to update favorite status. Please try again.');
+        }
     };
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
             if (user) {
                 console.log('User authenticated:', user.uid);
-                fetchOutfits();
+                // Wait a bit for the auth state to fully settle
+                setTimeout(() => {
+                    fetchOutfits();
+                }, 100);
             } else {
                 console.log('User not authenticated');
                 setOutfits([]);

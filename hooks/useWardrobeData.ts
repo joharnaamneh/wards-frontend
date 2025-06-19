@@ -1,20 +1,8 @@
+// hooks/useWardrobeData.ts - Updated to use centralized Firebase config
 import { useEffect, useState } from 'react';
-import { getAuth } from 'firebase/auth';
-import {
-    getFirestore,
-    collection,
-    query,
-    where,
-    getDocs,
-    addDoc,
-    deleteDoc,
-    doc,
-    serverTimestamp
-} from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig'; // Import from centralized config
 import { WardrobeItem } from '../types/WardrobeTypes';
-
-const db = getFirestore();
-const auth = getAuth();
 
 export const useWardrobeData = () => {
     const [items, setItems] = useState<WardrobeItem[]>([]);
@@ -31,7 +19,6 @@ export const useWardrobeData = () => {
             }
 
             console.log('Fetching for user:', user.uid);
-
             const wardrobeSnap = await getDocs(
                 query(collection(db, 'warderobe'), where('user_id', '==', user.uid))
             );
@@ -123,12 +110,10 @@ export const useWardrobeData = () => {
             query(collection(db, 'warderobe'), where('user_id', '==', user.uid))
         );
         const wardrobeDoc = wardrobeSnap.docs[0];
-
         if (!wardrobeDoc) return;
 
         const wardrobeId = wardrobeDoc.id;
         await deleteDoc(doc(db, 'warderobe', wardrobeId, 'items', itemId));
-
         await fetchItems(); // Refresh the items list
     };
 
