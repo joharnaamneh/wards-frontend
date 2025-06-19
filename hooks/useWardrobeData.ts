@@ -3,10 +3,13 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs, addDoc, deleteDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig'; // Import from centralized config
 import { WardrobeItem } from '../types/WardrobeTypes';
+import {useRouter} from "expo-router";
 
 export const useWardrobeData = () => {
     const [items, setItems] = useState<WardrobeItem[]>([]);
     const [loading, setLoading] = useState(true);
+
+    const router = useRouter();
 
     const fetchItems = async () => {
         try {
@@ -126,6 +129,8 @@ export const useWardrobeData = () => {
                 console.log('User not authenticated');
                 setItems([]);
                 setLoading(false);
+                router.replace('/login');
+
             }
         });
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { auth, db, storage } from '@/firebaseConfig';
 import { doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { updateProfile } from 'firebase/auth';
+import { updateProfile as updateAuthProfile } from 'firebase/auth'; // Renamed import
 import { UserProfile } from '@/types/UserTypes';
 
 export function useUserProfile() {
@@ -84,24 +84,37 @@ export function useUserProfile() {
 
         try {
             const userId = auth.currentUser.uid;
-            const updatedProfile = {
-                ...updates,
+
+            // Only include safe fields for Firestore
+            const firestoreUpdates = {
+                displayName: updates.displayName,
+                username: updates.username,
+                bio: updates.bio,
+                location: updates.location,
+                profilePicture: updates.profilePicture,
+                website: updates.website,
+                phoneNumber: updates.phoneNumber,
                 updatedAt: new Date(),
             };
 
+            // Remove undefined values
+            const cleanUpdates = Object.fromEntries(
+                Object.entries(firestoreUpdates).filter(([_, value]) => value !== undefined)
+            );
+
             // Update Firestore document
-            await updateDoc(doc(db, 'users', userId), updatedProfile);
+            await updateDoc(doc(db, 'users', userId), cleanUpdates);
 
             // Update Firebase Auth profile if display name or photo changed
-            if (updates.displayName || updates.profilePicture) {
-                await updateProfile(auth.currentUser, {
+            if (updates.displayName !== undefined || updates.profilePicture !== undefined) {
+                await updateAuthProfile(auth.currentUser, {
                     displayName: updates.displayName || userProfile.displayName,
                     photoURL: updates.profilePicture || userProfile.profilePicture,
                 });
             }
 
             // Update local state
-            setUserProfile(prev => prev ? { ...prev, ...updatedProfile } : null);
+            setUserProfile(prev => prev ? { ...prev, ...updates, updatedAt: new Date() } : null);
         } catch (err) {
             console.error('Error updating user profile:', err);
             throw err;
