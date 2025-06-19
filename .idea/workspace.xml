@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Refactored Wardrobe code&#10;- Added Storage implementation">
+    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="Created Profile stuff without implementation">
+      <change afterPath="$PROJECT_DIR$/components/EditProfileModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ProfileActions.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ProfileHeader.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/ProfileStats.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/components/SettingsModal.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/hooks/useUserProfile.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/types/UserTypes.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/outfit.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/outfit.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AddOutfitModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AddOutfitModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/firebaseConfig.js" beforeDir="false" afterPath="$PROJECT_DIR$/firebaseConfig.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useOutfitData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useOutfitData.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/hooks/useWardrobeData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useWardrobeData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/profile.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/profile.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +108,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750079998335</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="- Refactored Outfit code&#10;- Fixed Firebase bug">
+      <option name="closed" value="true" />
+      <created>1750326274574</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1750326274574</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -115,6 +126,8 @@
     <MESSAGE value="- Updated Wardrobe UI" />
     <MESSAGE value="- Udjusted layout" />
     <MESSAGE value="- Refactored Wardrobe code&#10;- Added Storage implementation" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Refactored Wardrobe code&#10;- Added Storage implementation" />
+    <MESSAGE value="- Refactored Outfit code&#10;- Fixed Firebase bug" />
+    <MESSAGE value="Created Profile stuff without implementation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created Profile stuff without implementation" />
   </component>
 </project>
