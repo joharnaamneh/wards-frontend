@@ -18,19 +18,22 @@ const MAPPING = {
   'paperplane.fill': 'send',
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
+  'hanger': 'checkroom', // For outfit/clothing hanger
+  'cabinet': 'storage', // For wardrobe/closet
+  'person.crop.circle': 'account-circle',
 } as IconMapping;
 
 /**
  * An icon component that uses native SF Symbols on iOS, and Material Icons on Android and web.
  * This ensures a consistent look across platforms, and optimal resource usage.
- * Icon `name`s are based on SF Symbols and require manual mapping to Material Icons.
+ * Icon *`name`*s are based on SF Symbols and require manual mapping to Material Icons.
  */
 export function IconSymbol({
-  name,
-  size = 24,
-  color,
-  style,
-}: {
+                             name,
+                             size = 24,
+                             color,
+                             style,
+                           }: {
   name: IconSymbolName;
   size?: number;
   color: string | OpaqueColorValue;

@@ -78,7 +78,7 @@ export default function WardrobeScreen() {
                     <IconSymbol
                         size={310}
                         color="#808080"
-                        name="house.fill"
+                        name="cabinet"
                         style={styles.headerImage}
                     />
                 }>

@@ -51,7 +51,7 @@ export default function OutfitScreen() {
                     <IconSymbol
                         size={310}
                         color="#808080"
-                        name="shirt.fill"
+                        name="hanger"
                         style={styles.headerIcon}
                     />
                 }
