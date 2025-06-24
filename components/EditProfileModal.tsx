@@ -16,6 +16,10 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { UserProfile } from '@/types/UserTypes';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { auth } from '@/firebaseConfig';
+
+const storage = getStorage();
 
 interface EditProfileModalProps {
     visible: boolean;
@@ -25,13 +29,7 @@ interface EditProfileModalProps {
     colors: any;
 }
 
-export const EditProfileModal: React.FC<EditProfileModalProps> = ({
-                                                                      visible,
-                                                                      userProfile,
-                                                                      onClose,
-                                                                      onSave,
-                                                                      colors,
-                                                                  }) => {
+export const EditProfileModal: React.FC<EditProfileModalProps> = ({visible, userProfile, onClose, onSave, colors,}) => {
     const [form, setForm] = useState({
         displayName: '',
         username: '',
@@ -43,10 +41,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isPickingImage, setIsPickingImage] = useState(false);
+    const [originalProfilePicture, setOriginalProfilePicture] = useState('');
 
     useEffect(() => {
         if (userProfile) {
-            setForm({
+            const profileData = {
                 displayName: userProfile.displayName || '',
                 username: userProfile.username || '',
                 bio: userProfile.bio || '',
@@ -54,13 +53,15 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 profilePicture: userProfile.profilePicture || '',
                 website: userProfile.website || '',
                 phoneNumber: userProfile.phoneNumber || '',
-            });
+            };
+            setForm(profileData);
+            setOriginalProfilePicture(userProfile.profilePicture || '');
         }
     }, [userProfile]);
 
     const reset = () => {
         if (userProfile) {
-            setForm({
+            const profileData = {
                 displayName: userProfile.displayName || '',
                 username: userProfile.username || '',
                 bio: userProfile.bio || '',
@@ -68,9 +69,107 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 profilePicture: userProfile.profilePicture || '',
                 website: userProfile.website || '',
                 phoneNumber: userProfile.phoneNumber || '',
-            });
+            };
+            setForm(profileData);
+            setOriginalProfilePicture(userProfile.profilePicture || '');
         }
         setIsSubmitting(false);
+    };
+    // 1. Fix the isValidUrl function
+    const isValidUrl = (string: string) => {
+        try {
+            const url = new URL(string);
+            return url.protocol === 'http:' || url.protocol === 'https:';
+        } catch (_) {
+            return false; // ← Fixed: should return false for invalid URLs
+        }
+    };
+
+// 2. Add debugging to the handleSubmit function
+    const handleSubmit = async () => {
+        if (!validateForm()) return;
+
+        if (!auth.currentUser) {
+            Alert.alert('Error', 'User not authenticated');
+            return;
+        }
+
+        setIsSubmitting(true);
+        try {
+            let updatedForm = { ...form };
+
+            console.log('=== PROFILE PICTURE DEBUG ===');
+            console.log('Current profilePicture:', form.profilePicture);
+            console.log('Original profilePicture:', originalProfilePicture);
+            console.log('Has changed:', form.profilePicture !== originalProfilePicture);
+            console.log('Starts with file://:', form.profilePicture?.startsWith('file://'));
+
+            // Check if profile picture has changed and needs to be uploaded
+            if (form.profilePicture && form.profilePicture !== originalProfilePicture) {
+                console.log('Profile picture has changed, checking if it needs upload...');
+
+                // Check if it's a local URI (starts with file://)
+                if (form.profilePicture.startsWith('file://')) {
+                    console.log('Uploading new profile picture...');
+                    const downloadURL = await uploadProfilePicture(form.profilePicture, auth.currentUser.uid);
+                    updatedForm.profilePicture = downloadURL;
+                    console.log('Profile picture uploaded successfully:', downloadURL);
+                } else {
+                    console.log('Profile picture is not a local file, skipping upload');
+                }
+            } else {
+                console.log('Profile picture has not changed, skipping upload');
+            }
+
+            console.log('Final updatedForm.profilePicture:', updatedForm.profilePicture);
+            console.log('=== END DEBUG ===');
+
+            await onSave(updatedForm);
+            Alert.alert('Success', 'Profile updated successfully!');
+            onClose();
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            let errorMessage = 'Failed to update profile. Please try again.';
+
+            if (error && typeof error === 'object') {
+                const err = error as any; // Type assertion for Firebase error codes
+                if (err.code === 'storage/unauthorized') {
+                    errorMessage = 'Failed to upload profile picture. Please try again.';
+                } else if (err.code === 'firestore/permission-denied') {
+                    errorMessage = 'Permission denied. Please try again.';
+                } else if (err.message) {
+                    errorMessage = err.message;
+                }
+            }
+
+
+            Alert.alert('Error', errorMessage);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+// 3. Add debugging to the processImage function
+    const processImage = async (imageUri: string) => {
+        try {
+            console.log('=== PROCESS IMAGE DEBUG ===');
+            console.log('Original imageUri:', imageUri);
+
+            // Resize and compress the image
+            const manipulatedImage = await ImageManipulator.manipulateAsync(
+                imageUri,
+                [{ resize: { width: 300, height: 300 } }],
+                { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+            );
+
+            console.log('Manipulated image URI:', manipulatedImage.uri);
+            console.log('=== END PROCESS IMAGE DEBUG ===');
+
+            setForm(prev => ({ ...prev, profilePicture: manipulatedImage.uri }));
+        } catch (error) {
+            console.error('Error processing image:', error);
+            Alert.alert('Error', 'Failed to process image. Please try again.');
+        }
     };
 
     const handleClose = () => {
@@ -103,32 +202,73 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         return true;
     };
 
-    const isValidUrl = (string: string) => {
-        try {
-            new URL(string);
-            return true;
-        } catch (_) {
-            return false;
-        }
-    };
 
-    const handleSubmit = async () => {
-        if (!validateForm()) return;
-
-        setIsSubmitting(true);
+    const uploadProfilePicture = async (imageUri: string, userId: string): Promise<string> => {
         try {
-            await onSave(form);
-            Alert.alert('Success', 'Profile updated successfully!');
-            onClose();
+            console.log('Starting image upload for URI:', imageUri);
+            console.log('User ID:', userId);
+
+            // Check if storage is properly initialized
+            if (!storage) {
+                throw new Error('Firebase Storage is not initialized');
+            }
+
+            console.log('Firebase Storage instance:', storage);
+            console.log('Storage app:', storage.app);
+
+            // Simple fetch approach that works with Expo
+            const response = await fetch(imageUri);
+            console.log('Fetch response status:', response.status, response.ok);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            console.log('Blob created - Size:', blob.size, 'Type:', blob.type);
+
+            if (!blob || blob.size === 0) {
+                throw new Error('Invalid image data - blob is empty');
+            }
+
+            const timestamp = Date.now();
+            const filename = `profile_${timestamp}.jpg`;
+            const storagePath = `profile-pictures/${userId}/${filename}`;
+
+            console.log('Storage path:', storagePath);
+
+            // Try to create storage reference with additional error checking
+            let storageRef;
+            try {
+                storageRef = ref(storage, storagePath);
+                console.log('Storage ref created successfully:', storageRef);
+            } catch (refError) {
+                console.error('Error creating storage reference:', refError);
+                throw new Error(`Failed to create storage reference: ${refError.message}`);
+            }
+
+            console.log('Starting Firebase upload...');
+            const uploadResult = await uploadBytes(storageRef, blob);
+            console.log('Upload successful. Metadata:', uploadResult.metadata);
+
+            const downloadURL = await getDownloadURL(storageRef);
+            console.log('Download URL obtained:', downloadURL);
+
+            return downloadURL;
         } catch (error) {
-            console.error('Error updating profile:', error);
-            Alert.alert('Error', 'Failed to update profile. Please try again.');
-        } finally {
-            setIsSubmitting(false);
+            console.error('Detailed error in uploadProfilePicture:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack,
+                imageUri,
+                userId
+            });
+
+            // Re-throw with original error message for debugging
+            throw error;
         }
     };
-
-    const pickImage = async () => {
+   const pickImage = async () => {
         try {
             setIsPickingImage(true);
 
@@ -195,21 +335,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         }
     };
 
-    const processImage = async (imageUri: string) => {
-        try {
-            // Resize and compress the image
-            const manipulatedImage = await ImageManipulator.manipulateAsync(
-                imageUri,
-                [{ resize: { width: 300, height: 300 } }],
-                { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
-            );
-
-            setForm(prev => ({ ...prev, profilePicture: manipulatedImage.uri }));
-        } catch (error) {
-            console.error('Error processing image:', error);
-            Alert.alert('Error', 'Failed to process image. Please try again.');
-        }
-    };
 
     const getInitials = (name: string) => {
         return name
@@ -257,7 +382,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                         <View style={styles.profilePictureSection}>
                             <Pressable
                                 onPress={pickImage}
-                                disabled={isPickingImage}
+                                disabled={isPickingImage || isSubmitting}
                                 style={styles.profilePictureContainer}
                             >
                                 {form.profilePicture ? (

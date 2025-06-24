@@ -4,10 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="Refactored and Improved Login accordingly to Register. Removed top bar header for login/register">
+    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Updated Icons">
+      <change afterPath="$PROJECT_DIR$/interfaces/register.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/_layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/login.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/login.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/register.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/EditProfileModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/EditProfileModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +89,9 @@
       <workItem from="1750144047978" duration="6486000" />
       <workItem from="1750230029784" duration="7789000" />
       <workItem from="1750355363397" duration="7814000" />
-      <workItem from="1750399362772" duration="5643000" />
+      <workItem from="1750399362772" duration="7470000" />
+      <workItem from="1750654337232" duration="3738000" />
+      <workItem from="1750676992765" duration="14167000" />
     </task>
     <task id="LOCAL-00001" summary="- Updated Wardrobe UI">
       <option name="closed" value="true" />
@@ -136,7 +141,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750364753728</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="- Updated Icons">
+      <option name="closed" value="true" />
+      <created>1750430120675</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1750430120675</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -150,6 +163,7 @@
     <MESSAGE value="Created Profile stuff without implementation" />
     <MESSAGE value="Refactored and Improved Register page" />
     <MESSAGE value="Refactored and Improved Login accordingly to Register. Removed top bar header for login/register" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refactored and Improved Login accordingly to Register. Removed top bar header for login/register" />
+    <MESSAGE value="- Updated Icons" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Updated Icons" />
   </component>
 </project>

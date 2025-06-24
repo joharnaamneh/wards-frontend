@@ -1,40 +1,21 @@
 // app/register.tsx
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-import {
-    Alert,
-    StyleSheet,
-    TextInput,
-    ScrollView,
-    View,
-    Pressable,
-    ActivityIndicator,
-    Image,
-    KeyboardAvoidingView,
-    Platform,
-} from 'react-native';
+import {Alert, StyleSheet, TextInput, ScrollView, View, Pressable, ActivityIndicator, Image, KeyboardAvoidingView, Platform,} from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { auth, db, storage } from '@/firebaseConfig';
+import { auth, db } from '@/firebaseConfig';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import * as ImagePicker from 'expo-image-picker';
 import * as ImageManipulator from 'expo-image-manipulator';
+import { RegisterForm } from '@/interfaces/register';
 
-interface RegisterForm {
-    email: string;
-    password: string;
-    confirmPassword: string;
-    displayName: string;
-    username: string;
-    bio: string;
-    location: string;
-    profilePicture: string;
-}
+const storage = getStorage();
 
 export default function RegisterScreen() {
     const [form, setForm] = useState<RegisterForm>({
@@ -223,13 +204,70 @@ export default function RegisterScreen() {
             setError('Failed to process image. Please try again.');
         }
     };
-
     const uploadProfilePicture = async (imageUri: string, userId: string): Promise<string> => {
-        const response = await fetch(imageUri);
-        const blob = await response.blob();
-        const storageRef = ref(storage, `profile-pictures/${userId}/${Date.now()}.jpg`);
-        await uploadBytes(storageRef, blob);
-        return await getDownloadURL(storageRef);
+        try {
+            console.log('Starting image upload for URI:', imageUri);
+            console.log('User ID:', userId);
+
+            // Check if storage is properly initialized
+            if (!storage) {
+                throw new Error('Firebase Storage is not initialized');
+            }
+
+            console.log('Firebase Storage instance:', storage);
+            console.log('Storage app:', storage.app);
+
+            // Simple fetch approach that works with Expo
+            const response = await fetch(imageUri);
+            console.log('Fetch response status:', response.status, response.ok);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch image: ${response.status} ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            console.log('Blob created - Size:', blob.size, 'Type:', blob.type);
+
+            if (!blob || blob.size === 0) {
+                throw new Error('Invalid image data - blob is empty');
+            }
+
+            const timestamp = Date.now();
+            const filename = `profile_${timestamp}.jpg`;
+            const storagePath = `profile-pictures/${userId}/${filename}`;
+
+            console.log('Storage path:', storagePath);
+
+            // Try to create storage reference with additional error checking
+            let storageRef;
+            try {
+                storageRef = ref(storage, storagePath);
+                console.log('Storage ref created successfully:', storageRef);
+            } catch (refError) {
+                console.error('Error creating storage reference:', refError);
+                throw new Error(`Failed to create storage reference: ${refError.message}`);
+            }
+
+            console.log('Starting Firebase upload...');
+            const uploadResult = await uploadBytes(storageRef, blob);
+            console.log('Upload successful. Metadata:', uploadResult.metadata);
+
+            const downloadURL = await getDownloadURL(storageRef);
+            console.log('Download URL obtained:', downloadURL);
+
+            return downloadURL;
+        } catch (error) {
+            console.error('Detailed error in uploadProfilePicture:', {
+                message: error.message,
+                name: error.name,
+                stack: error.stack,
+                imageUri,
+                userId
+            });
+
+            // Re-throw with original error message for debugging
+            throw error;
+        }
     };
     const handleRegister = async () => {
         setError(null);
@@ -265,7 +303,7 @@ export default function RegisterScreen() {
                 username: (form.username || '').toLowerCase().replace(/[^a-z0-9_]/g, ''),
                 email: form.email || user.email || '',
                 bio: form.bio || '',
-                location: form.location || '', // Ensure it's never undefined
+                location: form.location != null ? form.location : '',
                 profilePicture: profilePictureUrl || '',
                 createdAt: new Date(),
                 updatedAt: new Date(),
