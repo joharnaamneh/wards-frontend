@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import {
-    Modal,
-    View,
-    Pressable,
-    StyleSheet,
-    TextInput,
-    Image,
-    Alert,
-    KeyboardAvoidingView,
-    Platform,
-    ScrollView,
-    ActivityIndicator
-} from 'react-native';
+import { Modal, View, Pressable, StyleSheet, TextInput, Image, Alert, KeyboardAvoidingView, Platform, ScrollView, ActivityIndicator } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -37,14 +25,10 @@ const CLOTHING_CATEGORIES = {
 const SIZES = {
     'Clothing': ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'],
     'Shoes': ['5', '5.5', '6', '6.5', '7', '7.5', '8', '8.5', '9', '9.5', '10', '10.5', '11', '11.5', '12', '12.5', '13'],
-    'One Size': ['One Size']
+    'OneSize': ['One Size']
 };
 
-const COLORS = [
-    'Black', 'White', 'Gray', 'Navy', 'Blue', 'Light Blue', 'Red', 'Pink',
-    'Green', 'Olive', 'Yellow', 'Orange', 'Purple', 'Brown', 'Beige', 'Cream',
-    'Gold', 'Silver', 'Multi-Color', 'Pattern'
-];
+const COLORS = ['Black', 'White', 'Gray', 'Navy', 'Blue', 'Light Blue', 'Red', 'Pink', 'Green', 'Olive', 'Yellow', 'Orange', 'Purple', 'Brown', 'Beige', 'Cream', 'Gold', 'Silver', 'Multi-Color', 'Pattern'];
 
 interface AddItemModalProps {
     visible: boolean;
@@ -59,13 +43,14 @@ interface DropdownProps {
     onSelect: (value: string) => void;
     placeholder: string;
     colorScheme: 'light' | 'dark' | null;
+    zIndex: number;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelect, placeholder, colorScheme }) => {
+const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelect, placeholder, colorScheme, zIndex }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <View style={styles.dropdownContainer}>
+        <View style={[styles.dropdownContainer, { zIndex: isOpen ? zIndex : 1 }]}>
             <Pressable
                 style={[
                     styles.dropdownButton,
@@ -88,7 +73,6 @@ const Dropdown: React.FC<DropdownProps> = ({ options, value, onSelect, placehold
                     color={colorScheme === 'dark' ? '#888' : '#666'}
                 />
             </Pressable>
-
             {isOpen && (
                 <View style={[
                     styles.dropdownList,
@@ -161,11 +145,9 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
     const requestPermissions = async (): Promise<boolean> => {
         const { status: cameraStatus } = await ImagePicker.requestCameraPermissionsAsync();
         const { status: libraryStatus } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
         if (cameraStatus !== 'granted' || libraryStatus !== 'granted') {
-            Alert.alert(
-                'Permission Required',
-                'Camera and photo library permissions are required to add images.'
-            );
+            Alert.alert('Permission Required', 'Camera and photo library permissions are required to add images.');
             return false;
         }
         return true;
@@ -190,14 +172,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
         const response = await fetch(compressed);
         const blob = await response.blob();
 
-        // Option 1: Simple shared folder (use the Firebase rules above)
         const filename = `wardrobe_images/${Date.now()}_${Math.random().toString(36).substring(2)}.jpg`;
-
-        // Option 2: User-specific folder (requires auth and different rules)
-        // const user = auth.currentUser;
-        // if (!user) throw new Error('User not authenticated');
-        // const filename = `wardrobe_images/${user.uid}/${Date.now()}_${Math.random().toString(36).substring(2)}.jpg`;
-
         const imageRef = ref(storage, filename);
         await uploadBytes(imageRef, blob);
         return await getDownloadURL(imageRef);
@@ -206,12 +181,14 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
     const pickImageFromLibrary = async () => {
         const ok = await requestPermissions();
         if (!ok) return;
+
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
             quality: 0.7,
             aspect: [1, 1],
         });
+
         if (!result.canceled && result.assets?.[0]) {
             setImageUri(result.assets[0].uri);
             setShowImageOptions(false);
@@ -221,11 +198,13 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
     const pickImageFromCamera = async () => {
         const ok = await requestPermissions();
         if (!ok) return;
+
         const result = await ImagePicker.launchCameraAsync({
             allowsEditing: true,
             quality: 0.7,
             aspect: [1, 1],
         });
+
         if (!result.canceled && result.assets?.[0]) {
             setImageUri(result.assets[0].uri);
             setShowImageOptions(false);
@@ -246,7 +225,6 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
         try {
             const imageUrl = imageUri ? await uploadImageToFirebase(imageUri) : '';
 
-            // Create the item object without undefined fields
             const itemData: Omit<WardrobeItem, 'id' | 'created_at'> = {
                 name: newPiece.name,
                 type: newPiece.type,
@@ -275,7 +253,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
 
     const getSizeOptions = () => {
         if (newPiece.category === 'Footwear') return SIZES['Shoes'];
-        if (newPiece.category === 'Accessories') return SIZES['One Size'];
+        if (newPiece.category === 'Accessories') return SIZES['OneSize'];
         return SIZES['Clothing'];
     };
 
@@ -298,10 +276,9 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
 
                     <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
                         <View style={styles.form}>
-                            {/* Image Section - moved to top for better UX */}
+                            {/* Image Section */}
                             <View style={styles.imageSection}>
                                 <ThemedText type="defaultSemiBold" style={styles.sectionTitle}>Photo</ThemedText>
-
                                 <Pressable
                                     onPress={() => setShowImageOptions(!showImageOptions)}
                                     style={styles.imageContainer}
@@ -322,7 +299,6 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
                                         </ThemedView>
                                     )}
                                 </Pressable>
-
                                 {showImageOptions && (
                                     <View style={styles.imageOptions}>
                                         <Pressable onPress={pickImageFromCamera} style={styles.imageOptionButton}>
@@ -379,6 +355,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
                                         onSelect={(category) => setNewPiece({ ...newPiece, category, type: '' })}
                                         placeholder="Select category"
                                         colorScheme={colorScheme}
+                                        zIndex={1000}
                                     />
                                 </View>
 
@@ -391,6 +368,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
                                             onSelect={(type) => setNewPiece({ ...newPiece, type })}
                                             placeholder="Select type"
                                             colorScheme={colorScheme}
+                                            zIndex={999}
                                         />
                                     </View>
                                 )}
@@ -409,6 +387,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
                                             onSelect={(size) => setNewPiece({ ...newPiece, size })}
                                             placeholder="Select size"
                                             colorScheme={colorScheme}
+                                            zIndex={998}
                                         />
                                     </View>
                                     <View style={[styles.inputGroup, styles.flex, { marginLeft: 12 }]}>
@@ -419,6 +398,7 @@ export const AddItemModal: React.FC<AddItemModalProps> = ({ visible, onClose, on
                                             onSelect={(color) => setNewPiece({ ...newPiece, color })}
                                             placeholder="Select color"
                                             colorScheme={colorScheme}
+                                            zIndex={997}
                                         />
                                     </View>
                                 </View>
@@ -492,7 +472,7 @@ const styles = StyleSheet.create({
     overlay: {
         flex: 1,
         justifyContent: 'flex-end',
-        backgroundColor: 'rgba(0,0,0,0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modal: {
         height: '90%',
@@ -552,7 +532,6 @@ const styles = StyleSheet.create({
     flex: {
         flex: 1,
     },
-
     // Image styles
     imageSection: {
         alignItems: 'center',
@@ -583,7 +562,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         top: 8,
         right: 8,
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(0, 0, 0, 0.6)',
         borderRadius: 16,
         padding: 6,
     },
@@ -603,11 +582,9 @@ const styles = StyleSheet.create({
     removeButton: {
         borderColor: '#ff3b30',
     },
-
     // Dropdown styles
     dropdownContainer: {
         position: 'relative',
-        zIndex: 1000,
     },
     dropdownButton: {
         flexDirection: 'row',
@@ -629,7 +606,6 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 12,
         maxHeight: 200,
-        zIndex: 1001,
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
@@ -654,7 +630,6 @@ const styles = StyleSheet.create({
         color: '#007AFF',
         fontWeight: '500',
     },
-
     // Footer styles
     footer: {
         paddingTop: 16,

@@ -4,13 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Updated Icons">
-      <change afterPath="$PROJECT_DIR$/interfaces/register.ts" afterDir="false" />
+    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Fixed upload profile picture bug">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/register.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/EditProfileModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/EditProfileModal.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/AddItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AddItemModal.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +87,7 @@
       <workItem from="1750355363397" duration="7814000" />
       <workItem from="1750399362772" duration="7470000" />
       <workItem from="1750654337232" duration="3738000" />
-      <workItem from="1750676992765" duration="14167000" />
+      <workItem from="1750676992765" duration="15415000" />
     </task>
     <task id="LOCAL-00001" summary="- Updated Wardrobe UI">
       <option name="closed" value="true" />
@@ -149,7 +145,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750430120675</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="- Fixed upload profile picture bug">
+      <option name="closed" value="true" />
+      <created>1750794624494</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1750794624494</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -164,6 +168,7 @@
     <MESSAGE value="Refactored and Improved Register page" />
     <MESSAGE value="Refactored and Improved Login accordingly to Register. Removed top bar header for login/register" />
     <MESSAGE value="- Updated Icons" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Updated Icons" />
+    <MESSAGE value="- Fixed upload profile picture bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Fixed upload profile picture bug" />
   </component>
 </project>
