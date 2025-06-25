@@ -1,16 +1,6 @@
-// hooks/useOutfitData.ts - Enhanced with better error handling and debugging
+//hooks/useOutfitData.ts - Enhanced with better error handling and optimistic updates
 import { useEffect, useState } from 'react';
-import {
-    collection,
-    query,
-    where,
-    getDocs,
-    addDoc,
-    deleteDoc,
-    doc,
-    serverTimestamp,
-    updateDoc
-} from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, deleteDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { auth, db } from '../firebaseConfig';
 import { Outfit } from '../types/OutfitTypes';
 
@@ -22,7 +12,6 @@ export const useOutfitData = () => {
         try {
             setLoading(true);
             const user = auth.currentUser;
-
             if (!user) {
                 console.log('No authenticated user');
                 setLoading(false);
@@ -30,16 +19,11 @@ export const useOutfitData = () => {
             }
 
             console.log('Fetching outfits for user:', user.uid);
-
             const outfitsSnap = await getDocs(
-                query(
-                    collection(db, 'outfits'),
-                    where('user_id', '==', user.uid)
-                )
+                query(collection(db, 'outfits'), where('user_id', '==', user.uid))
             );
 
             console.log('Outfit docs found:', outfitsSnap.docs.length);
-
             const outfitsList = outfitsSnap.docs.map(doc => {
                 const data = doc.data();
                 return {
@@ -66,7 +50,6 @@ export const useOutfitData = () => {
 
     const addOutfit = async (newOutfit: Omit<Outfit, 'id' | 'created_at'>) => {
         const user = auth.currentUser;
-
         if (!user) {
             throw new Error('No authenticated user for adding outfit');
         }
@@ -75,7 +58,6 @@ export const useOutfitData = () => {
         if (!newOutfit.name.trim()) {
             throw new Error('Please enter a name for the outfit');
         }
-
         if (newOutfit.items.length === 0) {
             throw new Error('Please select at least one item for the outfit');
         }
@@ -95,14 +77,12 @@ export const useOutfitData = () => {
             };
 
             console.log('Final outfit data to save:', outfitData);
-
             const docRef = await addDoc(collection(db, 'outfits'), outfitData);
             console.log('Outfit added with ID:', docRef.id);
 
             await fetchOutfits(); // Refresh the outfits list
         } catch (error) {
             console.error('Detailed error adding outfit:', error);
-
             // More specific error messages
             if (error.code === 'permission-denied') {
                 throw new Error('Permission denied. Please check your Firestore security rules.');
@@ -121,10 +101,15 @@ export const useOutfitData = () => {
         if (!user) return;
 
         try {
+            // Optimistic update - remove from state immediately
+            setOutfits(prevOutfits => prevOutfits.filter(outfit => outfit.id !== outfitId));
+
             await deleteDoc(doc(db, 'outfits', outfitId));
-            await fetchOutfits(); // Refresh the outfits list
+            console.log('Outfit deleted successfully');
         } catch (error) {
             console.error('Error deleting outfit:', error);
+            // Revert optimistic update on error
+            await fetchOutfits();
             throw new Error('Failed to delete outfit. Please try again.');
         }
     };
@@ -134,12 +119,33 @@ export const useOutfitData = () => {
         if (!user) return;
 
         try {
+            // Optimistic update - update state immediately
+            setOutfits(prevOutfits =>
+                prevOutfits.map(outfit =>
+                    outfit.id === outfitId
+                        ? { ...outfit, favorite: !currentFavorite }
+                        : outfit
+                )
+            );
+
+            // Update in Firestore
             await updateDoc(doc(db, 'outfits', outfitId), {
                 favorite: !currentFavorite
             });
-            await fetchOutfits(); // Refresh the outfits list
+
+            console.log('Favorite status updated successfully');
         } catch (error) {
             console.error('Error toggling favorite:', error);
+
+            // Revert optimistic update on error
+            setOutfits(prevOutfits =>
+                prevOutfits.map(outfit =>
+                    outfit.id === outfitId
+                        ? { ...outfit, favorite: currentFavorite }
+                        : outfit
+                )
+            );
+
             throw new Error('Failed to update favorite status. Please try again.');
         }
     };

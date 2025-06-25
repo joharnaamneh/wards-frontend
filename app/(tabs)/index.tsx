@@ -23,7 +23,7 @@ export default function IndexRedirect() {
 
     return (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <ThemedText>Hello World!</ThemedText>
+            <ThemedText>Coming Soon</ThemedText>
             <HelloWave />
         </View>
     );

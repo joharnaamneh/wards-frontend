@@ -4,9 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Fixed upload profile picture bug">
+    <list default="true" id="21356be3-62dd-4ca2-b455-473f7bcbd067" name="Changes" comment="- Fixed AddItemModal dropdown overlay bug">
+      <change afterPath="$PROJECT_DIR$/contexts/ThemeContext.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/components/AddItemModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AddItemModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/(tabs)/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(tabs)/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/AddOutfitModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/AddOutfitModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/OutfitDetailsModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/OutfitDetailsModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/SettingsModal.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/SettingsModal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/ThemedText.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/components/ThemedText.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hooks/useOutfitData.ts" beforeDir="false" afterPath="$PROJECT_DIR$/hooks/useOutfitData.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/types/WardrobeTypes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/types/WardrobeTypes.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -87,7 +96,8 @@
       <workItem from="1750355363397" duration="7814000" />
       <workItem from="1750399362772" duration="7470000" />
       <workItem from="1750654337232" duration="3738000" />
-      <workItem from="1750676992765" duration="15415000" />
+      <workItem from="1750676992765" duration="19388000" />
+      <workItem from="1750800899929" duration="4443000" />
     </task>
     <task id="LOCAL-00001" summary="- Updated Wardrobe UI">
       <option name="closed" value="true" />
@@ -153,7 +163,15 @@
       <option name="project" value="LOCAL" />
       <updated>1750794624494</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="- Fixed AddItemModal dropdown overlay bug">
+      <option name="closed" value="true" />
+      <created>1750795670123</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1750795670123</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -169,6 +187,7 @@
     <MESSAGE value="Refactored and Improved Login accordingly to Register. Removed top bar header for login/register" />
     <MESSAGE value="- Updated Icons" />
     <MESSAGE value="- Fixed upload profile picture bug" />
-    <option name="LAST_COMMIT_MESSAGE" value="- Fixed upload profile picture bug" />
+    <MESSAGE value="- Fixed AddItemModal dropdown overlay bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="- Fixed AddItemModal dropdown overlay bug" />
   </component>
 </project>

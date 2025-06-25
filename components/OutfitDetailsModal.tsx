@@ -1,4 +1,4 @@
-// components/OutfitDetailsModal.tsx
+//components/OutfitDetailsModal.tsx
 import { Modal, Pressable, StyleSheet, Image, ScrollView } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
@@ -25,15 +25,25 @@ export const OutfitDetailsModal = ({
                                    }: OutfitDetailsModalProps) => {
     if (!outfit) return null;
 
-    const outfitItems = wardrobeItems.filter(item => outfit.items.includes(item.id));
+    // Fix: Handle both array of strings and array of objects with id property
+    const getItemIds = (items: any[]): string[] => {
+        return items.map(item => {
+            if (typeof item === 'string') {
+                return item;
+            } else if (item && typeof item === 'object' && item.id) {
+                return item.id;
+            }
+            return '';
+        }).filter(id => id !== '');
+    };
+
+    const itemIds = getItemIds(outfit.items);
+    const outfitItems = wardrobeItems.filter(item => itemIds.includes(item.id));
 
     return (
         <Modal visible={!!outfit} transparent animationType="slide">
             <ThemedView style={styles.modalOverlay}>
-                <ThemedView style={[
-                    styles.modal,
-                    { backgroundColor: colorScheme === 'dark' ? '#1c1c1e' : '#fff' }
-                ]}>
+                <ThemedView style={[styles.modal, { backgroundColor: colorScheme === 'dark' ? '#1c1c1e' : '#fff' }]}>
                     <ScrollView
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.scrollContent}
@@ -55,7 +65,9 @@ export const OutfitDetailsModal = ({
                         )}
 
                         <ThemedView style={styles.titleContainer}>
-                            <ThemedText type="title" style={styles.modalTitle}>{outfit.name}</ThemedText>
+                            <ThemedText type="title" style={styles.modalTitle}>
+                                {outfit.name}
+                            </ThemedText>
                             <Pressable
                                 onPress={() => onToggleFavorite(outfit.id, outfit.favorite || false)}
                                 style={styles.favoriteButton}
@@ -144,7 +156,7 @@ export const OutfitDetailsModal = ({
 const styles = StyleSheet.create({
     modalOverlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
@@ -207,7 +219,7 @@ const styles = StyleSheet.create({
         gap: 12,
         padding: 12,
         borderRadius: 8,
-        backgroundColor: 'rgba(0, 0, 0, 0.05)',
+        backgroundColor: 'rgba(0,0,0,0.05)',
     },
     itemImage: {
         width: 40,
@@ -232,7 +244,7 @@ const styles = StyleSheet.create({
         padding: 20,
         paddingTop: 10,
         borderTopWidth: 1,
-        borderTopColor: 'rgba(0, 0, 0, 0.1)',
+        borderTopColor: 'rgba(0,0,0,0.1)',
     },
     modalButton: {
         flex: 1,
